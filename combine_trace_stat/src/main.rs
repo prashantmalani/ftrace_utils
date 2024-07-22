@@ -17,6 +17,8 @@ use std::{
     path::Path,
 };
 
+use pad::PadStr;
+
 #[derive(Debug, PartialEq)]
 struct FunctionStats {
     function_name: String,
@@ -118,12 +120,18 @@ fn main() -> Result<(), Box<dyn Error>> {
         // We skip it here for brevity, but let me know if you need it. 
     }
     
-    println!("Function Hit Time Avg");
+    println!("{} {} {} {}",
+        "Function name".pad_to_width(40),
+        "Hit Count".pad_to_width(20),
+        "Time Total".pad_to_width(20),
+        "Avg".pad_to_width(20));
     // Print Consolidated Results
     for (function_name, stats) in consolidated_stats {
         println!(
-            "{:?} {:?} {:?}us {:?}us",
-            function_name, stats.hit_count, stats.time_total, stats.time_avg
+            "{} {} {} {}",
+            function_name.pad_to_width(40), stats.hit_count.to_string().pad_to_width(20),
+            (stats.time_total.to_string() + "us").pad_to_width(20),
+            (stats.time_avg.to_string() + "us").pad_to_width(20)
         ); 
     }
 
