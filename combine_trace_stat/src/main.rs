@@ -119,6 +119,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         // during the initial parsing and aggregation.
         // We skip it here for brevity, but let me know if you need it. 
     }
+
+    // Sort the results according to average time.
+    let mut sorted_stats: Vec<_> = consolidated_stats.into_iter().collect();
+
+    // 2. Sort the Vec by average time (descending)
+    sorted_stats.sort_by(|(_, stats1), (_, stats2)| {
+        stats2.time_avg.partial_cmp(&stats1.time_avg).unwrap() // Use partial_cmp to handle NaN
+    });
     
     println!("{} {} {} {}",
         "Function name".pad_to_width(40),
@@ -126,7 +134,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "Time Total".pad_to_width(20),
         "Avg".pad_to_width(20));
     // Print Consolidated Results
-    for (function_name, stats) in consolidated_stats {
+    for (function_name, stats) in sorted_stats {
         println!(
             "{} {} {} {}",
             function_name.pad_to_width(40), stats.hit_count.to_string().pad_to_width(20),
